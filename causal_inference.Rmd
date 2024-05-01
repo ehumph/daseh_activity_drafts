@@ -1,0 +1,43 @@
+# Intro
+
+This activity is adapted from the excellent materials presented in the course [_Causal Inference in R_](https://www.r-causal.org/) created and written by Malcolm Barrett, Lucy D’Agostino McGowan, and Travis Gerke. They cover the causal process in great detail.
+
+# Packages Needed
+
+In order to run a causal analysis in R, you'll use the tidyverse packages of <INSERT PACKAGE NAMES>
+
+# STEPS OF CAUSAL INFERENCE (ex: do you gain weight if you quit smoking?)
+
+1. **Hardest part of any analysis: specifying what the causal question actually is**
+2. Draw assumptions (ie, causal diagrams) <- second hardest part
+3. Model the assumptions (for this workshop, focus is on propensity weighting)
+	- goal is not to predict whether someone quit smoking
+	- goal is to figure out the propensity for an individual to quit smoking given all the other confounders
+	**this step lets you calculate the propensity score weights
+	**more efficient than direct adjustment
+4. Analyze the assumption model (make sure it works when it should and doesn't work when it shouldn't)
+	- basically, we are "re-weighting" the confounder distribution of former smokers so that it is "the same"/comparable to the distribution of still smokers
+	- one approach is to use the absolute standard mean difference for each confounder (smd < 0.1 is "okay" is the general rule of thumb)
+	- matching another approach (an alternative to propensity weights), but it's a less statistically efficient approach
+	- propensity weight de-biases the estimate but biases the std dev
+	(we have created two pseudopopulations that have the same distributions for each confounder and we're comparing them, not the actual populations)
+5. Estimate the causal effects based on your model
+	- we end up with a weighted linear regression estimating for the pseudopopulations
+	- we can also "fix" the biased SE using a robust estimator (in general, the estimated SEs are too small with the initial, unfancy weighted linear regression [OLS: original least squares]) <- robust estimator is the most conservative, so estimated CIs around estimand are the wider than the estimated CI from bootstrapping
+	- we could also "fix" the biased SE using a bootstrap (works well, creates a distribution of estimated effects, computationally intensive <- NO KIDDING, says the phylogeneticist)
+	NOTE: weights are not fixed, so we have to reestimate the weights for each bootstrapped replicate
+6. Finally, do a sensitivity analysis (under these different conditions, how do the estimated causal effects change?)
+	- lets you figure out under what conditions you would change your mind about what is a causal effect
+	(What would it take to tip our confidence bound to cross zero? How bad would the unmeasured confounder have to be?)
+	- also very useful when you have unmeasured confounders!
+	
+# Step 1: Identifying the causal question
+
+For this activity, we'll be working with the combined dataset from the California Communities Environmental Health Screening Tool. We will access version 4.0 of this dataset using the `dasehdata` package, but you can also download it directly from the [CalEnviroScreen website](https://oehha.ca.gov/calenviroscreen/report/calenviroscreen-40).
+
+```{r}
+install.packages("dasehdata")
+load(dasehdata)
+```
+
+From your previous work with this dataset, you might remember that it contains information about asthma rates, air pollution, and demographic data for census tracts within California. Let's say we're interested in whether increased air pollution can cause 
