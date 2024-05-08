@@ -1,3 +1,14 @@
+---
+title: "mapping"
+output: html_document
+date: "2024-05-02"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
 # Intro
 
 This activity is adapted from the excellent materials presented in the course [_Causal Inference in R_](https://www.r-causal.org/) created and written by Malcolm Barrett, Lucy D’Agostino McGowan, and Travis Gerke. They cover the causal process in great detail.

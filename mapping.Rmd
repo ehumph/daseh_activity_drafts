@@ -1,0 +1,13 @@
+---
+title: "mapping"
+output: html_document
+date: "2024-05-02"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Intro
+
+This activity is adapted from the excellent materials presented by Roger Peng in his book _Mastering Software Development in R_. It specifically adapts the code provided in the [Mapping](https://bookdown.org/rdpeng/RProgDA/mapping.html) chapter. 
